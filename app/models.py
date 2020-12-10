@@ -9,7 +9,6 @@ class Visitor(db.Model):
     remote_addr = db.Column(db.String(16), index=True)
     t_last_seen = db.Column(db.DateTime)
     last_cat_idx = db.Column(db.Integer, default=-1)
-    # deleted = db.Column(db.Boolean, default=False)
 
     def get_mod_time(self) -> str:
         s = self.id % 60
@@ -28,5 +27,5 @@ class Cat(db.Model):
 class Thumbnail(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cat_id = db.Column(db.Integer, unique=True, index=True)
-    data = db.Column(db.BLOB)
+    data = db.Column(db.LargeBinary)
     width = db.Column(db.Integer)
