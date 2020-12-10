@@ -1,0 +1,28 @@
+{% extends "base.htm" %}
+{% block content %}
+<span style="float: right; padding-right: 2em;"><a href="/logout">logout</a></span>
+<h1 style="margin: 1.5em 0 0 2em;">Alёshka.site admin page</h1>
+<div class="admin-form">
+    <form action="/admin" method="POST">
+        <ul id="pictures">
+        {%- for cat in cats %}
+        <li draggable="true" ondragover="dragOver(event)" ondragstart="dragStart(event)">
+			<input type="hidden" name="cat{{cat.id}}_idx" value="{{cat.index}}" />
+			<a href="{{cat.url}}">{{cat.url}}</a>
+			<br /><br />
+			<img src="{{ thumb(cat) }}" class="thumb" />
+            <input type="checkbox" class="custom-checkbox" name="cat{{cat.id}}_enabled" id="cat{{cat.id}}_enabled" {% if not cat.disabled %}checked{%endif%} />
+            <label for="cat{{cat.id}}_enabled">enabled</label>
+		</li>
+        {%- endfor %}
+        </ul>
+        <br />
+        <h4 style="display: inline;">Add new picture:</h4>
+        &nbsp;&nbsp;
+        <input type="text" name="catnew_url" value="" class="url" style="height: 32px;" />
+        <br />
+        <br />
+        <input type="submit" />
+    </form>
+</div>
+{% endblock %}

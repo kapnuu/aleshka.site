@@ -1,0 +1,12 @@
+{% extends "base.htm" %}
+{% block content %}
+<div class="fullpage" onclick="go('');" id="swipe_zone">
+</div>
+
+<div class="bg">
+</div>
+{%- if balloon %}
+<p class="balloon" onclick="hide(this);">
+    {{ balloon | safe }}
+</p>{%- endif %}
+{% endblock %}

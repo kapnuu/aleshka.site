@@ -1,0 +1,7 @@
+flask>=1.1.2
+werkzeug>=1.0.1
+sqlalchemy>=1.3.20
+requests>=2.25.0
+Pillow==8.0.1
+flask-sqlalchemy>=2.4.4
+flask-migrate>=2.5.3

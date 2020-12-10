@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{%if title%}{{title}} :: {%endif%}Alёshka.site😽</title>
+    <link rel="stylesheet" href="/static/content/main.css">
+    {% if request.path=='/admin' %}<link rel="stylesheet" href="/static/content/admin.css">{% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Alёshka. Mr. Koshani. Ser Pounce. Little kitty from Nizhniy Novgorod, Russia.">
+    <meta property="og:title" content="Alёshka.site😽">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="http://{{ request.host }}/static/img/opengraph.jpg">
+    <meta property="og:url" content="http://{{ request.host }}">
+    <meta property="og:description" content="Alёshka. Mr. Koshani. Ser Pounce. Little kitty from Nizhniy Novgorod, Russia.">
+    <script src="/static/scripts/swipe-listener.min.js" type="text/javascript"></script>
+    <script src="/static/scripts/main.js"></script>
+    {% if request.path=='/admin' %}<script src="/static/scripts/admin.js"></script>{% endif %}
+    <script type="text/javascript">
+document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.which == 32 || evt.keyCode == 32 || // space
+        evt.which == 39 || evt.keyCode == 39) { // ->
+        go("");
+    }
+    else if (evt.which == 37 || evt.keyCode == 37) { // <-
+        go("{% if visitor %}?prev={{visitor.etag}}{% endif %}");
+    }
+};
+function load() {
+    var container = document.getElementById('swipe_zone');
+    var listener = SwipeListener(container);
+    container.addEventListener('swipe', function (e) {
+        if (e.detail.directions.left) {
+            go("");
+        }
+        else if (e.detail.directions.right) {
+            go("{% if visitor %}?prev={{visitor.etag}}{% endif %}");
+        }
+    });
+}
+    </script>
+    <style type="text/css">
+{%- if request.path=='/' %}
+.bg {
+    background: url({{cat.url}}) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    -webkit-filter: blur(8px);
+    -moz-filter: blur(8px);
+    -o-filter: blur(8px);
+    -ms-filter: blur(8px);
+    filter: blur(8px);
+    z-index: -1;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+}
+.fullpage {
+    background: url({{cat.url}}) no-repeat center center fixed;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+    cursor: pointer;
+}
+{%- endif %}
+    </style>
+</head>
+<body onload="load();">
+{%- with messages = get_flashed_messages(with_categories=true) -%}
+{%- if messages -%}
+{%- for category, message in messages %}
+<div class="alert alert-{{category}}" onclick="hide(this);">
+    {{ message|safe }}
+</div>
+{% endfor -%}
+{%- endif -%}
+{%- endwith -%}
+
+{% block content %}{% endblock %}
+</body>
+</html>
+<!-- (c) 2020 kapnuu (pryanichnikov.av at gmail.com) -->
