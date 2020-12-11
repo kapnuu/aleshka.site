@@ -69,7 +69,7 @@ def index():
     #        balloon = '''That`s all, my friend!<br />
     # <br />
     # Sincerely yours, Alёshka🐾.'''
-    current_app.logger.debug(f'Visitor #{visitor.id} {visitor.etag}: last seen: {visitor.last_cat_idx}; now showing {cat.index}')
+    current_app.logger.info(f'Visitor #{visitor.id} {visitor.etag}: last seen: {visitor.last_cat_idx}; now showing {cat.index}')
 
     visitor.t_last_seen = datetime.now()
     visitor.last_cat_idx = cat.index
