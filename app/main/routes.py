@@ -11,7 +11,7 @@ def render_template2(path, **args):
 
 def logged_in():
     ret = False
-    current_app.logger.info(f'session["logged_in"] = {session.get("t_logged_in")}')
+    current_app.logger.info(f'session["logged_in"] = {session.get("logged_in")}')
     if session.get('logged_in'):
         t_logged_in = session.get('t_logged_in')
         if t_logged_in:
@@ -21,6 +21,7 @@ def logged_in():
                 session['t_logged_in'] = datetime.utcnow()
                 ret = True
         if not ret:
+            current_app.logger.info('Clearing session["logged_in"]')
             session['logged_in'] = False
     return ret
 
