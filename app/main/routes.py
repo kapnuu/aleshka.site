@@ -30,11 +30,11 @@ def logged_in():
 def index():
     visitor = None
 
-    last_cat = get_last_cat()
+    '''last_cat = get_last_cat()
     if last_cat:
         current_app.logger.info(f'Deleting {last_cat}')
         db.session.delete(last_cat)
-        db.session.commit()
+        db.session.commit()'''
 
     prev = False
     etag = request.args.get('prev')
