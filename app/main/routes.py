@@ -11,11 +11,12 @@ def render_template2(path, **args):
 
 def logged_in():
     ret = False
+    current_app.logger.info(f'session["logged_in"] = {session.get("t_logged_in")}')
     if session.get('logged_in'):
         t_logged_in = session.get('t_logged_in')
         if t_logged_in:
             ago_s = (datetime.utcnow()-t_logged_in).seconds
-            current_app.logger.debug(f'Admin is logged in and was active {ago_s//60}m {ago_s%60}s ago')
+            current_app.logger.info(f'Admin is logged in and was active {ago_s//60}m {ago_s%60}s ago')
             if ago_s < 20 * 60:  # 20min #TODO move to config
                 session['t_logged_in'] = datetime.utcnow()
                 ret = True
