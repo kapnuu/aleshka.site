@@ -2,6 +2,7 @@ from app.main.logic import *
 from app.thumbnail import thumb
 from app.main import bp
 from flask import redirect, render_template, flash, request, make_response, session, url_for, current_app
+from flask import send_from_directory
 from datetime import datetime
 
 
@@ -24,6 +25,11 @@ def logged_in():
             current_app.logger.info('Clearing session["logged_in"]')
             session['logged_in'] = False
     return ret
+
+
+@bp.route('/.well-known/acme-challenge/<file>')
+def letsencrypt(file):
+    return send_from_directory('static/.well-known/acme-challenge', file)
 
 
 @bp.route('/')
