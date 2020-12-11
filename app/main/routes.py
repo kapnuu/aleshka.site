@@ -80,7 +80,7 @@ def index():
         return redirect(url_for('main.index'))
     r = make_response(render_template2('index.htm', visitor=visitor, cat=cat, balloon=balloon))
     r.headers.set('ETag', visitor.etag)
-    # r.headers.set('Cache-Control', 'max-age=0, private')
+    r.headers.set('Cache-Control', 'max-age=0, private')
     r.headers.set('Last-Modified', f'Thu, 10 Dec 2020 {visitor.get_mod_time()} GMT')
 
     current_app.logger.debug(f'Set last modified: {visitor.get_mod_time()}')
