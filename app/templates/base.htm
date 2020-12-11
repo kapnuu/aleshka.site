@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: http://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
     <title>{%if title%}{{title}} :: {%endif%}Alёshka.site😽</title>
@@ -10,7 +10,8 @@
     <meta property="og:title" content="Alёshka.site😽">
     <meta property="og:type" content="website">
     <meta property="og:image" content="http://{{ request.host }}/static/img/opengraph.jpg">
-    <meta property="og:url" content="http://{{ request.host }}">
+    <meta property="og:image:secure_url" content="https://{{ request.host }}/static/img/opengraph.jpg">
+    <meta property="og:url" content="https://{{ request.host }}">
     <meta property="og:description" content="Alёshka. Mr. Koshani. Ser Pounce. Little kitty from Nizhniy Novgorod, Russia.">
     <script src="/static/scripts/swipe-listener.min.js" type="text/javascript"></script>
     <script src="/static/scripts/main.js"></script>
@@ -28,15 +29,17 @@ document.onkeydown = function(evt) {
 };
 function load() {
     var container = document.getElementById('swipe_zone');
-    var listener = SwipeListener(container);
-    container.addEventListener('swipe', function (e) {
-        if (e.detail.directions.left) {
-            go("");
-        }
-        else if (e.detail.directions.right) {
-            go("{% if visitor %}?prev={{visitor.etag}}{% endif %}");
-        }
-    });
+    if (container) {
+        var listener = SwipeListener(container);
+        container.addEventListener('swipe', function (e) {
+            if (e.detail.directions.left) {
+                go("");
+            }
+            else if (e.detail.directions.right) {
+                go("{% if visitor %}?prev={{visitor.etag}}{% endif %}");
+            }
+        });
+    }
 }
     </script>
     <style type="text/css">
