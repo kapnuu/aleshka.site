@@ -133,3 +133,5 @@ dmypy.json
 
 # aleshka
 app.db
+letsencrypt.txt
+app/static/.well-known/acme-challenge
