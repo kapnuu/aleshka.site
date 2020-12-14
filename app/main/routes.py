@@ -12,6 +12,7 @@ def render_template2(path, **args):
 
 def logged_in():
     ret = False
+    current_app.logger.info(f'session: {id(session)} {session}')
     current_app.logger.info(f'session["logged_in"] = {session.get("logged_in")}')
     if session.get('logged_in'):
         t_logged_in = session.get('t_logged_in')
