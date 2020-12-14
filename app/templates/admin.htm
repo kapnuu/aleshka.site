@@ -1,7 +1,7 @@
 {% extends "base.htm" %}
 {% block content %}
 <span style="float: right; padding-right: 2em;"><a href="/logout">logout</a></span>
-<h1 style="margin: 1.5em 0 0 2em;">Alёshka.site admin page</h1>
+<h1 style="margin: 1.5em 0 0 2em;">Alёshka.site admin page ({{cats|length}})</h1>
 <div class="admin-form">
     <form action="/admin" method="POST">
         <ul id="pictures">

@@ -1,10 +1,10 @@
 body {
-    background: #595959;
+    background: white;
     margin: 0;
 }
 input, textarea {
-    background-color: #ECF0F1;
-    border: 2px solid transparent;
+    background-color: white;
+    border: 1px solid black;
     border-radius: 3px;
     font-size: 16px;
     font-weight: 200;
@@ -13,7 +13,7 @@ input, textarea {
 h1 {
     font-size: 1.8em;
     font-weight: bold;
-    color: #efefef;
+    color: black;
 }
 h3 {
     display: block;
@@ -52,7 +52,7 @@ li label {
 .admin-form {
     margin: 20px auto;
     padding: 20px;
-    color: #c0c0c0;
+    color: black;
 }
 .admin-form input[type="submit"] {
     width: 240px;
@@ -60,7 +60,7 @@ li label {
     background-color: black;
     border-radius: 3px;
     box-shadow: none;
-    border: 2px solid transparent;
+    border: 2px solid black;
     color: white;
     font-size: 16px;
     line-height: 25px;
