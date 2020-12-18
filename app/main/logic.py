@@ -3,7 +3,7 @@ import base64
 import re
 from sqlalchemy import and_, desc
 from sqlalchemy.sql.expression import func
-from flask import session, flash, current_app
+from flask import flash, current_app
 from werkzeug.security import check_password_hash
 
 
@@ -73,8 +73,8 @@ def create_visitor(remote_addr: str) -> models.Visitor:
     over_limit = models.Visitor.query.order_by(desc(models.Visitor.t_last_seen)).limit(1).offset(100).first()
     if over_limit:
         del_over_limit = models.Visitor.__table__.delete().where(models.Visitor.t_last_seen >= over_limit.t_last_seen)
-        session.execute(del_over_limit)
-        session.commit()
+        db.session.execute(del_over_limit)
+        db.session.commit()
 
     # TODO max visitors count with same IP to config
     neighbours = models.Visitor.query\
