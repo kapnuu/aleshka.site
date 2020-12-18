@@ -65,8 +65,8 @@ def index():
     if not visitor:
         remote_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         visitor = create_visitor(remote_addr)
-        balloon = '''Refresh page or use spacebar or “➡” button to see next picture,
-    “⬅” to see previous.<br />
+        balloon = '''Refresh page or use spacebar or “👉” button to see next picture,
+    “👈” to see previous.<br />
     Enjoy!<br />
     <br />
     Sincerely yours, Alёshka🐾.'''

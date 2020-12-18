@@ -8,7 +8,13 @@ from flask import current_app
 _THUMB_WIDTH = 250
 
 
-def thumb(cat):
+def thumb(cat: models.Cat):
+    """Return thumbnail for cat image for further use in `data:image/png;base64,...`
+    Args:
+        cat (models.Cat): Cat object.
+    Returns:
+        Base64-encoded thumbnail in PNG format.
+    """
     ret = cat.url
     # https://ia.wampi.ru/2020/09/26/x_0Baq_AkQY.th.jpg <- '.th' added to original URI
     if '.wampi.ru/' in ret:
@@ -31,7 +37,14 @@ def thumb(cat):
     return ret
 
 
-def create_thumbnail_for_url(url, size):
+def create_thumbnail_for_url(url: str, size: int):
+    """Create thumbnail for image.
+    Args:
+        url (str): Image URL.
+        size (int): Thumbnail size.
+    Returns:
+        Output data (thumbnail bytes).
+    """
     current_app.logger.debug(f'Downloading {url} to create thumbnail (w={size})')
     r = requests.get(url)
     if r.status_code == 200:
@@ -41,7 +54,14 @@ def create_thumbnail_for_url(url, size):
             return data
 
 
-def create_thumbnail(indata, size):
+def create_thumbnail(indata: bytes, size: int):
+    """Create thumbnail for image bytes.
+    Args:
+        indata (bytes): Input data (image bytes).
+        size (int): Thumbnail size.
+    Returns:
+        Output data (thumbnail bytes).
+    """
     if indata:
         infile = BytesIO(indata)
 

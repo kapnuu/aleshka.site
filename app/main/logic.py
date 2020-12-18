@@ -8,6 +8,13 @@ from werkzeug.security import check_password_hash
 
 
 def verify_password(username: str, password: str) -> bool:
+    """Verify password correctness.
+    Args:
+        username (str): User login.
+        password (str): User password.
+    Returns:
+        True if password is valid.
+    """
     root = current_app.config['ROOT']
     if root is None:
         return True
@@ -18,7 +25,13 @@ def verify_password(username: str, password: str) -> bool:
     return False
 
 
-def _generate_etag(s) -> str:
+def _generate_etag(s: str) -> str:
+    """Generate unique ID string for user.
+    Args:
+        s (str): Input string, mostly user id in `xx:xx:xx` format.
+    Returns:
+        Unique ID.
+    """
     try:
         return base64.b64encode(s.encode()).decode('ascii')
     except:
@@ -26,6 +39,12 @@ def _generate_etag(s) -> str:
 
 
 def get_etag(s: str) -> str:
+    """Generate unique ID string for user.
+    Args:
+        s (str): Input string, mostly value of HTTP header `If-Modified-Since`.
+    Returns:
+        Unique ID.
+    """
     m = re.search('(\\d{2}:\\d{2}:\\d{2})', s)
     if m:
         time = m[0]
@@ -33,11 +52,23 @@ def get_etag(s: str) -> str:
 
 
 def get_visitor(etag: str) -> models.Visitor:
+    """Find visitor by unique ID.
+    Args:
+        etag (str): Unique ID.
+    Returns:
+        Existing visitor or None.
+    """
     visitor = models.Visitor.query.filter(etag == models.Visitor.etag).first()
     return visitor
 
 
 def create_visitor(remote_addr: str) -> models.Visitor:
+    """Create new visitor or return existing in case of DOS/DDOS.
+    Args:
+        remote_addr (str): User remote address (IP).
+    Returns:
+        New visitor or existing one in case of DOS/DDOS.
+    """
     # TODO max visitors count to config
     over_limit = models.Visitor.query.order_by(desc(models.Visitor.t_last_seen)).limit(1).offset(100).first()
     if over_limit:
@@ -69,14 +100,20 @@ def create_visitor(remote_addr: str) -> models.Visitor:
 
 
 def get_random_cat() -> models.Cat:
+    """Get random cat from database."""
     return models.Cat.query.filter(models.Cat.disabled == False).order_by(func.random()).first()
 
 
 def get_first_cat() -> models.Cat:
+    """Get cat with minimal view index from database."""
     return models.Cat.query.filter(models.Cat.disabled == False).order_by(models.Cat.index).first()
 
 
 def get_next_cat(last_index: int) -> models.Cat:
+    """Get next cat.
+    Args:
+        last_index (int): View index of last seen cat.
+    """
     cat = None
     if last_index != -1:
         cat = models.Cat.query.filter(and_(models.Cat.disabled == False, models.Cat.index > last_index)).order_by(
@@ -87,11 +124,16 @@ def get_next_cat(last_index: int) -> models.Cat:
 
 
 def get_last_cat() -> models.Cat:
+    """Get cat with maximal view index from database."""
     return models.Cat.query.filter(models.Cat.disabled == False).order_by(desc(models.Cat.index)).first()
     # and_(models.Cat.disabled == False, models.Cat.index >= 0)).first()
 
 
 def get_previous_cat(last_index: int) -> models.Cat:
+    """Get previous cat.
+    Args:
+        last_index (int): View index of last seen cat.
+    """
     cat = models.Cat.query.filter(and_(models.Cat.disabled == False, models.Cat.index < last_index)).order_by(
         desc(models.Cat.index)).first()
     if cat is None:
@@ -100,6 +142,10 @@ def get_previous_cat(last_index: int) -> models.Cat:
 
 
 def process_cat_form(form):
+    """Process admin form with cats data.
+    Args:
+        form: Data from HTTP POST request.
+    """
     new_cat = None
 
     indices = {}
