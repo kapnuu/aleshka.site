@@ -25,3 +25,5 @@ class Config(object):
         ROOT_PASSWORD = generate_password_hash(os.getenv('ROOT_PASSWORD'))
     else:
         ROOT_PASSWORD = None
+
+    LANGUAGES = ['en', 'ru']

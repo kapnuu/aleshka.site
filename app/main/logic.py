@@ -3,7 +3,7 @@ import base64
 import re
 from sqlalchemy import and_, desc
 from sqlalchemy.sql.expression import func
-from flask import flash, current_app
+from flask import flash, current_app, session
 from werkzeug.security import check_password_hash
 
 
@@ -34,8 +34,8 @@ def _generate_etag(s: str) -> str:
     """
     try:
         return base64.b64encode(s.encode()).decode('ascii')
-    except:
-        return None
+    except RuntimeError:
+        pass
 
 
 def get_etag(s: str) -> str:
@@ -161,8 +161,8 @@ def process_cat_form(form):
                 if cat_id == 'new':
                     if param == 'url':
                         new_cat = value
-                    elif param == 'idx':
-                        new_cat_idx = int(value)
+                    # elif param == 'idx':
+                    #    new_cat_idx = int(value)
                 else:
                     cat_id = int(cat_id)
                     if param == 'idx':
@@ -187,6 +187,24 @@ def process_cat_form(form):
             current_app.logger.info(f'New picture {new_cat} added')
         else:
             current_app.logger.warning(f'Picture {new_cat} is already known')
-            flash('this picture is already known', category='error')
+            flash('This picture is already known', category='error')
 
     db.session.commit()
+
+
+def get_greeting_balloon(locale: str) -> str:
+    """Return text of greeting balloon for first visit.
+    Args:
+        locale (str): Visitor locale. The only applicable value is `ru`.
+    """
+    if locale == 'ru':
+        return '''Обновите страницу или нажмите пробел или кнопку «👉»,
+            чтобы увидеть следующее изображение; нажмите «👈», чтобы увидеть предыдущее.<br />
+            Наслаждайтесь!<br />
+            <br />
+            С уважением, Алёшка🐾.'''
+    return '''Refresh page or use spacebar or “👉” button to see next picture,
+        “👈” to see previous.<br />
+        Enjoy!<br />
+        <br />
+        Sincerely yours, Alёshka🐾.'''

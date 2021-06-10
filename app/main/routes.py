@@ -65,11 +65,9 @@ def index():
     if not visitor:
         remote_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         visitor = create_visitor(remote_addr)
-        balloon = '''Refresh page or use spacebar or “👉” button to see next picture,
-    “👈” to see previous.<br />
-    Enjoy!<br />
-    <br />
-    Sincerely yours, Alёshka🐾.'''
+        locale = request.accept_languages.best_match(current_app.config['LANGUAGES'])
+        balloon = get_greeting_balloon(locale)
+    # accept-language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7
 
     if prev:
         cat = get_previous_cat(visitor.last_cat_idx)
