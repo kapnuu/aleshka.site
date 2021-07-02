@@ -35,7 +35,7 @@ def letsencrypt(file):
 
 @bp.route('/favicon.ico')
 def favicon():
-    return send_from_directory('static/img/favicon/favicon.ico')
+    return send_from_directory('static/img/favicon', 'favicon.ico')
 
 
 @bp.route('/')
