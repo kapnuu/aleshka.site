@@ -33,6 +33,11 @@ def letsencrypt(file):
     return send_from_directory('static/.well-known/acme-challenge', file)
 
 
+@bp.route('/favicon.ico')
+def favicon():
+    return send_from_directory('static/img/favicon/favicon.ico')
+
+
 @bp.route('/')
 def index():
     visitor = None
