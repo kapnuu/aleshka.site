@@ -1,7 +1,7 @@
 from app.main.logic import *
 from app.thumbnail import thumb
 from app.main import bp
-from flask import redirect, render_template, flash, request, make_response, session, url_for, current_app
+from flask import redirect, render_template, flash, request, make_response, session, url_for, current_app, Response
 from flask import send_from_directory
 from datetime import datetime
 
@@ -30,7 +30,9 @@ def logged_in():
 
 @bp.route('/robots.txt')
 def robots_txt():
-    return send_from_directory('static/content', 'robots.txt', cache_timeout=0)
+    r = Response(render_template('robots.txt'))
+    r.headers = {'content-type': 'text/plain'}
+    return r
 
 
 @bp.route('/sitemap.xml')
