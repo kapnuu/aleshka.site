@@ -28,9 +28,14 @@ def logged_in():
     return ret
 
 
-@bp.route('/.well-known/acme-challenge/<file>')
-def letsencrypt(file):
-    return send_from_directory('static/.well-known/acme-challenge', file)
+@bp.route('/robots.txt')
+def robots_txt():
+    return send_from_directory('static/content', 'robots.txt')
+
+
+@bp.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory('static/content', 'sitemap.xml')
 
 
 @bp.route('/favicon.ico')
