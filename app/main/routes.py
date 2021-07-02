@@ -30,7 +30,7 @@ def logged_in():
 
 @bp.route('/robots.txt')
 def robots_txt():
-    return send_from_directory('static/content', 'robots.txt')
+    return send_from_directory('static/content', 'robots.txt', cache_timeout=0)
 
 
 @bp.route('/sitemap.xml')
