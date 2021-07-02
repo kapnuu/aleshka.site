@@ -73,3 +73,5 @@ def create_thumbnail(indata: bytes, size: int):
         outdata = outfile.getvalue()
 
         return outdata
+
+# TODO look at https://www.cloudimage.io/en/home
