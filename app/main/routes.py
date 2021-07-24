@@ -13,19 +13,25 @@ def render_template2(path, **args):
 def logged_in():
     ret = False
     current_app.logger.info(f'session: {id(session)} {session}')
-    current_app.logger.info(f'session["logged_in"] = {session.get("logged_in")}')
-    if session.get('logged_in'):
-        t_logged_in = session.get('t_logged_in')
-        if t_logged_in:
-            ago_s = (datetime.utcnow()-t_logged_in).seconds
-            current_app.logger.info(f'Admin is logged in and was active {ago_s//60}m {ago_s%60}s ago')
-            if ago_s < 20 * 60:  # 20min #TODO move to config
-                session['t_logged_in'] = datetime.utcnow()
-                ret = True
-        if not ret:
-            current_app.logger.info('Clearing session["logged_in"]')
-            session['logged_in'] = False
+    # current_app.logger.info(f'session["logged_in"] = {session.get("logged_in")}')
+    t_logged_in = session.get('logged_in')
+    if t_logged_in:
+        ago_s = (datetime.utcnow() - t_logged_in).seconds
+        current_app.logger.info(f'Admin is logged in and was active {ago_s//60}m {ago_s%60}s ago')
+        if ago_s < 20 * 60:  # 20min #TODO move to config
+            session['logged_in'] = datetime.utcnow()
+            ret = True
+    if not ret:
+        current_app.logger.info('Clearing session["logged_in"]')
+        if 'logged_in' in session:
+            del session['logged_in']
     return ret
+
+
+# @bp.after_request
+# def after_request(response):
+#    current_app.logger.info(f'session["logged_in"]: {session.get("logged_in")}')
+#    return response
 
 
 @bp.route('/robots.txt')
@@ -88,10 +94,7 @@ def index():
         visitor.last_cat_idx = cat.index
     else:
         cat = get_next_cat(visitor.last_cat_idx)
-    #    if cat.index == 0 and not balloon:
-    #        balloon = '''That`s all, my friend!<br />
-    # <br />
-    # Sincerely yours, Alёshka🐾.'''
+
     current_app.logger.info(f'Visitor #{visitor.id} {visitor.etag}: last seen: {visitor.last_cat_idx}; now showing {cat.index}')
 
     visitor.t_last_seen = datetime.now()
@@ -113,7 +116,8 @@ def index():
 
 @bp.route('/logout')
 def logout():
-    session['logged_in'] = False
+    if 'logged_in' in session:
+        del session['logged_in']
     current_app.logger.info(f'Admin logged out at {datetime.now()}')
     return redirect(url_for('main.index'))
 
@@ -126,8 +130,7 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         if verify_password(username, password):
-            session['logged_in'] = True
-            session['t_logged_in'] = datetime.utcnow()
+            session['logged_in'] = datetime.utcnow()
             current_app.logger.info(f'Auth of `{username}:{password}` from {request.remote_addr} '
                                     f'succeeded at {datetime.now()}')
             return redirect(url_for('main.admin'))

@@ -20,7 +20,6 @@ def verify_password(username: str, password: str) -> bool:
         return True
     if username == root:
         if check_password_hash(current_app.config['ROOT_PASSWORD'], password):
-            session['logged_in'] = True
             return True
     return False
 
