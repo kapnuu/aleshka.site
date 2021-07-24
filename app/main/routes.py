@@ -14,6 +14,7 @@ def logged_in():
     ret = False
     current_app.logger.info(f'session: {id(session)} {session}')
     # current_app.logger.info(f'session["logged_in"] = {session.get("logged_in")}')
+    current_app.logger.info(f'secret key: {current_app.config["SECRET_KEY"]}')
     t_logged_in = session.get('logged_in')
     if t_logged_in:
         ago_s = (datetime.utcnow() - t_logged_in).seconds
