@@ -9,7 +9,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config(object):
     CSRF_ENABLED = True
     # SECRET_KEY = 'all-cats-are-beautiful:)'
-    SECRET_KEY = os.urandom(16)
+    SECRET_KEY = os.getenv('SECRET_KEY')  # os.urandom(16)
 
     database_uri = os.environ.get('DATABASE_URL')
     if database_uri is None:
