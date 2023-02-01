@@ -15,7 +15,7 @@ class Config(object):
     if database_uri is None:
         SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
     else:
-        SQLALCHEMY_DATABASE_URI = database_uri
+        SQLALCHEMY_DATABASE_URI = database_uri.replace('postgres://', 'postgresql://')
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
