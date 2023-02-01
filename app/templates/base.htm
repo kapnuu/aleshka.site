@@ -6,16 +6,16 @@
     <link rel="stylesheet" href="/static/content/main.css">
     {% if request.path=='/admin' %}<link rel="stylesheet" href="/static/content/admin.css">{% endif %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Alёshka. Mr. Koshani. Ser Pounce. Little kitty from Nizhniy Novgorod, Russia.">
+    <meta name="description" content="Alёshka. Mr. Koshani. Ser Pounce. Little kitty from Belgrade, Serbia.">
     <meta property="og:title" content="Alёshka.site😽">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://{{ request.host }}/static/img/opengraph.jpg">
     <meta property="og:image:width" content="726"/>
     <meta property="og:image:height" content="443"/>
     <meta property="og:url" content="https://{{ request.host }}">
-    <meta property="og:description" content="Alёshka. Mr. Koshani. Ser Pounce. Little kitty from Nizhniy Novgorod, Russia.">
+    <meta property="og:description" content="Alёshka. Mr. Koshani. Ser Pounce. Little kitty from Belgrade, Serbia.">
     <!-- link type="image/x-icon" rel="shortcut icon" href="/static/img/favicon/favicon.ico" -->
-    <link type="image/x-icon" rel="icon" href="https://{{ request.host }}/favicon.ico">
+    <link type="image/x-icon" rel="icon" href="favicon.ico">
     <link type="image/png" sizes="16x16" rel="icon" href="/static/img/favicon/favicon_16.png">
     <link type="image/png" sizes="32x32" rel="icon" href="/static/img/favicon/favicon_32.png">
     <link type="image/png" sizes="96x96" rel="icon" href="/static/img/favicon/favicon_96.png">
@@ -32,19 +32,24 @@ document.onkeydown = function(evt) {
         go("");
     }
     else if (evt.which == 37 || evt.keyCode == 37) { // <-
-        go("{% if visitor %}?prev={{visitor.etag}}{% endif %}");
+        go_prev();
     }
 };
+function go_prev() {
+    go("{% if visitor %}?prev={{visitor.etag}}{% endif %}");
+}
 function load() {
     var container = document.getElementById('swipe_zone');
     if (container) {
         var listener = SwipeListener(container);
         container.addEventListener('swipe', function (e) {
             if (e.detail.directions.left) {
+                console.log('swipe left');
                 go("");
             }
             else if (e.detail.directions.right) {
-                go("{% if visitor %}?prev={{visitor.etag}}{% endif %}");
+                console.log('swipe right');
+                go_prev();
             }
         });
     }
@@ -109,5 +114,5 @@ function load() {
 {% block content %}{% endblock %}
 </body>
 </html>
-<!-- (c) 2020 kapnuu (pryanichnikov.av at gmail.com) -->
+<!-- (c) 2022 kapnuu (pryanichnikov.av at gmail.com) -->
 <!-- contacts: aleshka@aleshka.site -->

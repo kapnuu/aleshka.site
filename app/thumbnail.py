@@ -1,14 +1,16 @@
-from app import db, models
-import requests
 from base64 import b64encode
-from PIL import Image
 from io import BytesIO
+
+import requests
+from PIL import Image
 from flask import current_app
+
+from app import db, models
 
 _THUMB_WIDTH = 250
 
 
-def thumb(cat: models.Cat):
+def thumb(cat: models.Cat) -> str:
     """Return thumbnail for cat image for further use in `data:image/png;base64,...`
     Args:
         cat (models.Cat): Cat object.
@@ -32,12 +34,12 @@ def thumb(cat: models.Cat):
                                   width=_THUMB_WIDTH)
             db.session.add(th)
             db.session.commit()
-        ret = "data:image/png;base64," + b64encode(th.data).decode()
+        ret = 'data:image/png;base64,' + b64encode(th.data).decode()
 
     return ret
 
 
-def create_thumbnail_for_url(url: str, size: int):
+def create_thumbnail_for_url(url: str, size: int) -> bytes:
     """Create thumbnail for image.
     Args:
         url (str): Image URL.
@@ -54,24 +56,24 @@ def create_thumbnail_for_url(url: str, size: int):
             return data
 
 
-def create_thumbnail(indata: bytes, size: int):
+def create_thumbnail(in_data: bytes, size: int) -> bytes:
     """Create thumbnail for image bytes.
     Args:
-        indata (bytes): Input data (image bytes).
+        in_data (bytes): Input data (image bytes).
         size (int): Thumbnail size.
     Returns:
         Output data (thumbnail bytes).
     """
-    if indata:
-        infile = BytesIO(indata)
+    if in_data:
+        infile = BytesIO(in_data)
 
         img = Image.open(infile)
         img.thumbnail((size, 600 * size))
 
-        outfile = BytesIO()
-        img.save(outfile, 'png')
-        outdata = outfile.getvalue()
+        out_file = BytesIO()
+        img.save(out_file, 'png')
+        out_data = out_file.getvalue()
 
-        return outdata
+        return out_data
 
 # TODO look at https://www.cloudimage.io/en/home

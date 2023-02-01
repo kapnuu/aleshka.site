@@ -19,7 +19,7 @@ def logged_in():
     if t_logged_in:
         ago_s = (datetime.utcnow() - t_logged_in).seconds
         current_app.logger.info(f'Admin is logged in and was active {ago_s//60}m {ago_s%60}s ago')
-        if ago_s < 20 * 60:  # 20min #TODO move to config
+        if ago_s < current_app.config['LOGIN_TIMEOUT']:
             session['logged_in'] = datetime.utcnow()
             ret = True
     if not ret:
@@ -27,12 +27,6 @@ def logged_in():
         if 'logged_in' in session:
             del session['logged_in']
     return ret
-
-
-# @bp.after_request
-# def after_request(response):
-#    current_app.logger.info(f'session["logged_in"]: {session.get("logged_in")}')
-#    return response
 
 
 @bp.route('/robots.txt')
@@ -56,31 +50,25 @@ def favicon():
 def index():
     visitor = None
 
-    '''last_cat = get_last_cat()
-    if last_cat:
-        current_app.logger.info(f'Deleting {last_cat}')
-        db.session.delete(last_cat)
-        db.session.commit()'''
-
     prev = False
-    etag = request.args.get('prev')
-    if etag:
+    uid = request.args.get('prev')
+    if uid:
         prev = True
     else:
-        etag = next((x[1] for x in request.headers if x[0].lower() == 'if-none-match'), None)
-        if not etag:
+        uid = next((x[1] for x in request.headers if x[0].lower() == 'if-none-match'), None)
+        if not uid:
             modified = next((x[1] for x in request.headers if x[0].lower() == 'if-modified-since'), None)
             if modified:
                 current_app.logger.debug(f'Getting if-modified-since: {modified}')
-                etag = get_etag(modified)
+                uid = get_uid(modified)
 
         # current_app.logger.debug(f'Headers: {request.headers}')
 
     balloon = None
 
-    current_app.logger.debug(f'ETag: {etag}')
-    if etag:
-        visitor = get_visitor(etag)
+    current_app.logger.debug(f'requested image for UID "{uid}"')
+    if uid:
+        visitor = get_visitor(uid)
     if not visitor:
         remote_addr = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
         visitor = create_visitor(remote_addr)
@@ -96,7 +84,8 @@ def index():
     else:
         cat = get_next_cat(visitor.last_cat_idx)
 
-    current_app.logger.info(f'Visitor #{visitor.id} {visitor.etag}: last seen: {visitor.last_cat_idx}; now showing {cat.index}')
+    current_app.logger.info(f'Visitor #{visitor.id} "{visitor.etag}": '
+                            f'last seen: {visitor.last_cat_idx}; now showing {cat.index}')
 
     visitor.t_last_seen = datetime.now()
     visitor.last_cat_idx = cat.index
@@ -111,7 +100,6 @@ def index():
     r.headers.set('Last-Modified', f'Thu, 10 Dec 2020 {visitor.get_mod_time()} GMT')
 
     current_app.logger.debug(f'Set last modified: {visitor.get_mod_time()}')
-    # current_app.logger.debug(f'Headers: {r.headers}')
     return r
 
 
@@ -138,7 +126,7 @@ def login():
         else:
             current_app.logger.warning(f'Auth of `{username}:{password}` failed')
             flash('invalid username or password', category='error')
-    return render_template2('login.htm', title='Вход')
+    return render_template2('login.htm', title='Login')
 
 
 @bp.route('/admin', methods=['GET', 'POST'])
@@ -156,10 +144,5 @@ def admin():
         cats = models.Cat.query.order_by(models.Cat.index).all()
         return render_template2('admin.htm', title='Admin page', cats=cats, thumb=thumb)
     return redirect(url_for('main.login'))
-
-
-# @bp.app_errorhandler(404)
-# def handle_404(err):
-#    return redirect(url_for('main.index'))
 
 # ETag idea: https://habr.com/en/company/edison/blog/509484/

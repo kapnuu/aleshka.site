@@ -1,19 +1,21 @@
-from app import db, models
 import base64
 import re
+from typing import Optional
+
+from flask import flash, current_app
 from sqlalchemy import and_, desc
 from sqlalchemy.sql.expression import func
-from flask import flash, current_app, session
 from werkzeug.security import check_password_hash
+
+from app import db, models
 
 
 def verify_password(username: str, password: str) -> bool:
     """Verify password correctness.
-    Args:
-        username (str): User login.
-        password (str): User password.
-    Returns:
-        True if password is valid.
+
+    :param username: user login
+    :param password: user password
+    :return: True if password is valid
     """
     root = current_app.config['ROOT']
     if root is None:
@@ -24,12 +26,11 @@ def verify_password(username: str, password: str) -> bool:
     return False
 
 
-def _generate_etag(s: str) -> str:
+def _generate_uid(s: str) -> str:
     """Generate unique ID string for user.
-    Args:
-        s (str): Input string, mostly user id in `xx:xx:xx` format.
-    Returns:
-        Unique ID.
+
+    :param s: input string, mostly user id in "xx:xx:xx" format
+    :return: unique ID
     """
     try:
         return base64.b64encode(s.encode()).decode('ascii')
@@ -37,36 +38,33 @@ def _generate_etag(s: str) -> str:
         pass
 
 
-def get_etag(s: str) -> str:
+def get_uid(s: str) -> str:
     """Generate unique ID string for user.
-    Args:
-        s (str): Input string, mostly value of HTTP header `If-Modified-Since`.
-    Returns:
-        Unique ID.
+
+    :param s: input string, mostly value of HTTP header "If-Modified-Since"
+    :return: unique ID
     """
     m = re.search('(\\d{2}:\\d{2}:\\d{2})', s)
     if m:
         time = m[0]
-        return _generate_etag(time)
+        return _generate_uid(time)
 
 
-def get_visitor(etag: str) -> models.Visitor:
+def get_visitor(uid: str) -> Optional[models.Visitor]:
     """Find visitor by unique ID.
-    Args:
-        etag (str): Unique ID.
-    Returns:
-        Existing visitor or None.
+
+    :param uid: unique ID
+    :return: existing visitor or None
     """
-    visitor = models.Visitor.query.filter(etag == models.Visitor.etag).first()
+    visitor = models.Visitor.query.filter(uid == models.Visitor.etag).first()
     return visitor
 
 
 def create_visitor(remote_addr: str) -> models.Visitor:
     """Create new visitor or return existing in case of DOS/DDOS.
-    Args:
-        remote_addr (str): User remote address (IP).
-    Returns:
-        New visitor or existing one in case of DOS/DDOS.
+
+    :param remote_addr: user remote address (IP)
+    :return: new visitor or existing one in case of DOS/DDOS.
     """
     # TODO max visitors count to config
     over_limit = models.Visitor.query.order_by(desc(models.Visitor.t_last_seen)).limit(1).offset(100).first()
@@ -91,7 +89,7 @@ def create_visitor(remote_addr: str) -> models.Visitor:
     db.session.add(visitor)
     db.session.commit()
 
-    visitor.etag = _generate_etag(visitor.get_mod_time())
+    visitor.etag = _generate_uid(visitor.get_mod_time())
     db.session.add(visitor)
 
     current_app.logger.info(f'Creating visitor with ETag {visitor.etag}')
@@ -110,8 +108,8 @@ def get_first_cat() -> models.Cat:
 
 def get_next_cat(last_index: int) -> models.Cat:
     """Get next cat.
-    Args:
-        last_index (int): View index of last seen cat.
+
+    :param last_index: view index of last seen cat
     """
     cat = None
     if last_index != -1:
@@ -130,8 +128,8 @@ def get_last_cat() -> models.Cat:
 
 def get_previous_cat(last_index: int) -> models.Cat:
     """Get previous cat.
-    Args:
-        last_index (int): View index of last seen cat.
+
+    :param last_index: view index of last seen cat
     """
     cat = models.Cat.query.filter(and_(models.Cat.disabled == False, models.Cat.index < last_index)).order_by(
         desc(models.Cat.index)).first()
@@ -142,8 +140,8 @@ def get_previous_cat(last_index: int) -> models.Cat:
 
 def process_cat_form(form):
     """Process admin form with cats data.
-    Args:
-        form: Data from HTTP POST request.
+
+    :param form: data from HTTP POST request
     """
     new_cat = None
 
@@ -193,8 +191,8 @@ def process_cat_form(form):
 
 def get_greeting_balloon(locale: str) -> str:
     """Return text of greeting balloon for first visit.
-    Args:
-        locale (str): Visitor locale. The only applicable value is `ru`.
+
+    :param locale: visitor locale. The only applicable value is "ru".
     """
     if locale == 'ru':
         return '''Обновите страницу или нажмите пробел или кнопку «👉»,

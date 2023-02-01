@@ -9,7 +9,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config(object):
     CSRF_ENABLED = True
     # SECRET_KEY = 'all-cats-are-beautiful:)'
-    SECRET_KEY = os.getenv('SECRET_KEY')  # os.urandom(16)
+    SECRET_KEY = os.getenv('SECRET_KEY')
 
     database_uri = os.environ.get('DATABASE_URL')
     if database_uri is None:
@@ -27,3 +27,5 @@ class Config(object):
         ROOT_PASSWORD = None
 
     LANGUAGES = ['en', 'ru']
+
+    LOGIN_TIMEOUT = 20 * 60  # 20 minutes
