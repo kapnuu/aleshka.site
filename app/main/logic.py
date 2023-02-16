@@ -19,7 +19,8 @@ def verify_password(username: str, password: str) -> bool:
     """
     root = current_app.config['ROOT']
     if root is None:
-        return True
+        flash('Root user is not set', category='error')
+        return False
     if username == root:
         if check_password_hash(current_app.config['ROOT_PASSWORD'], password):
             return True
