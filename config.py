@@ -26,8 +26,10 @@ class Config(object):
 
     ROOT = os.environ.get('ROOT')
     if ROOT:
+        print(f'ROOT is {ROOT}')
         ROOT_PASSWORD = generate_password_hash(os.getenv('ROOT_PASSWORD'))
     else:
+        print('ROOT is undefined')
         ROOT_PASSWORD = None
 
     LANGUAGES = ['en', 'ru']
