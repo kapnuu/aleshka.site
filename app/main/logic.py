@@ -91,6 +91,7 @@ def create_visitor(remote_addr: str) -> models.Visitor:
 
     visitor.etag = _generate_uid(visitor.get_mod_time())
     db.session.add(visitor)
+    db.session.commit()
 
     current_app.logger.info(f'Creating visitor with ETag {visitor.etag}')
     return visitor

@@ -78,18 +78,24 @@ def index():
 
     if prev:
         cat = get_previous_cat(visitor.last_cat_idx)
-        visitor.last_cat_idx = cat.index
-        cat = get_previous_cat(visitor.last_cat_idx)  # twice because of redirect that increments index
-        visitor.last_cat_idx = cat.index
+        if cat:
+            visitor.last_cat_idx = cat.index
+            cat = get_previous_cat(visitor.last_cat_idx)  # twice because of redirect that increments index
+            visitor.last_cat_idx = cat.index
     else:
         cat = get_next_cat(visitor.last_cat_idx)
 
-    current_app.logger.info(f'Visitor #{visitor.id} "{visitor.etag}": '
-                            f'last seen: {visitor.last_cat_idx}; now showing {cat.index}')
+    if cat:
+        current_app.logger.info(f'Visitor #{visitor.id} "{visitor.etag}": '
+                                f'last seen: {visitor.last_cat_idx}; now showing {cat.index}')
 
-    visitor.t_last_seen = datetime.now()
-    visitor.last_cat_idx = cat.index
-    db.session.commit()
+        visitor.t_last_seen = datetime.now()
+        visitor.last_cat_idx = cat.index
+        db.session.commit()
+    else:
+        current_app.logger.warning(f'Visitor #{visitor.id} "{visitor.etag}": no cats found')
+        flash('No images found', category='error')
+
 
     # flash('This is a public service announcement, this is only a test.', category='error')
     if prev:

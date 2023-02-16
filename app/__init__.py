@@ -1,5 +1,6 @@
 import logging
 import os
+import secrets
 from logging.handlers import RotatingFileHandler
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -13,6 +14,7 @@ migrate = Migrate(compare_type=True)
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    app.secret_key = secrets.token_bytes(24)
     db.init_app(app)
     migrate.init_app(app, db)
 
