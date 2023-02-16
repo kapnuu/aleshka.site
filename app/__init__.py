@@ -1,14 +1,12 @@
 import logging
 import os
 import secrets
-from dotenv import load_dotenv, find_dotenv
 from logging.handlers import RotatingFileHandler
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from config import Config
 
-load_dotenv(find_dotenv())
 
 db = SQLAlchemy()
 migrate = Migrate(compare_type=True)

@@ -1,9 +1,13 @@
 import os
+from dotenv import load_dotenv, find_dotenv
+from pathlib import Path
 from werkzeug.security import generate_password_hash
 
 __author__ = 'kapnuu'
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+basedir = str(Path(__file__).resolve().parent.parent)
+
+load_dotenv(find_dotenv())
 
 
 class Config(object):
