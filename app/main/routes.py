@@ -17,6 +17,7 @@ def logged_in():
     # current_app.logger.info(f'secret key: {current_app.config["SECRET_KEY"]}')
     t_logged_in = session.get('logged_in')
     if t_logged_in:
+        t_logged_in = t_logged_in.replace(tzinfo=None)
         ago_s = (datetime.utcnow() - t_logged_in).seconds
         current_app.logger.info(f'Admin is logged in and was active {ago_s//60}m {ago_s%60}s ago')
         if ago_s < current_app.config['LOGIN_TIMEOUT']:
