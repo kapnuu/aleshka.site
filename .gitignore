@@ -135,3 +135,4 @@ dmypy.json
 app.db
 letsencrypt.txt
 app/static/.well-known/acme-challenge
+logs
