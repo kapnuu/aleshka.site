@@ -96,15 +96,15 @@ a:hover {
 /* flash messages */
 .alert {
   cursor: pointer;
-  padding:10px;
   font-size: 110%;
-  position:absolute;
+  position: absolute;
   left: 400px;
   top: 60px;
-  -webkit-border-radius:6px; -moz-border-radius:6px; border-radius:6px;
+  border-radius:6px;
+  padding: 10px;
 }
 .alert-error:before {
-  content: '☠️ '
+  content: "☠️ ";
 }
 .alert-error {
   background:#e88;

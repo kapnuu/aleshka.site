@@ -1,8 +1,7 @@
 function assign_ids(el) {
-	for (var i=0; i < el.childElementCount; ++i) {
-		//el.children[i].firstElementChild.innerText = i;
-		el.children[i].firstElementChild.value = i;
-	}
+  for (var i=0; i < el.childElementCount; ++i) {
+    el.children[i].firstElementChild.value = i;
+  }
 }
 
 var _el;
