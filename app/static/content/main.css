@@ -49,21 +49,18 @@ a:hover {
 .fullpage {
   height: 100vh;
   width: 100vw;
-  /*border: 5px solid yellow;*/
 }
 .left_part {
   height: 100vh;
   width: 25vw;
   position: absolute;
   left: 0;
-  /*border: 2px solid red;*/
 }
 .right_part {
   height: 100vh;
   width: 75vw;
   position: absolute;
   left: 25vw;
-  /*border: 2px solid green;*/
 }
 /* --------------------------------------------------------- */
 /* balloon */
@@ -88,9 +85,11 @@ a:hover {
   top: 20px;
   width: 280px;
   height: auto;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #eee;
   padding: 10px;
+  padding-left: 16px;
+  border-right: 10px solid orange;
 }
 /* --------------------------------------------------------- */
 /* flash messages */
@@ -100,7 +99,7 @@ a:hover {
   position: absolute;
   left: 400px;
   top: 60px;
-  border-radius:6px;
+  border-radius: 6px;
   padding: 10px;
 }
 .alert-error:before {
