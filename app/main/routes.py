@@ -1,13 +1,14 @@
 from app.main.logic import *
 from app.thumbnail import thumb
 from app.main import bp
-from flask import redirect, render_template, flash, request, make_response, session, url_for, current_app, Response
+from flask import (redirect, render_template as base_render_template,
+                   flash, request, make_response, session, url_for, current_app, Response)
 from flask import send_from_directory
 from datetime import datetime
 
 
-def render_template2(path, **args):
-    return render_template(path, **args, logged_in=session.get('logged_in'))
+def render_template(path, **args):
+    return base_render_template(path, **args, logged_in=session.get('logged_in'))
 
 
 def logged_in():
@@ -32,7 +33,7 @@ def logged_in():
 
 @bp.route('/robots.txt')
 def robots_txt():
-    r = Response(render_template('robots.txt'))
+    r = Response(base_render_template('robots.txt'))
     r.headers = {'content-type': 'text/plain'}
     return r
 
@@ -101,7 +102,7 @@ def index():
     # flash('This is a public service announcement, this is only a test.', category='error')
     if prev:
         return redirect(url_for('main.index'))
-    r = make_response(render_template2('index.htm', visitor=visitor, cat=cat, balloon=balloon))
+    r = make_response(render_template('index.htm', visitor=visitor, cat=cat, balloon=balloon))
     r.headers.set('ETag', visitor.etag)
     r.headers.set('Cache-Control', 'max-age=0, private')
     r.headers.set('Last-Modified', f'Thu, 10 Dec 2020 {visitor.get_mod_time()} GMT')
@@ -133,7 +134,7 @@ def login():
         else:
             current_app.logger.warning(f'Auth of `{username}:{password}` failed')
             flash('invalid username or password', category='error')
-    return render_template2('login.htm', title='Login')
+    return render_template('login.htm', title='Login')
 
 
 @bp.route('/admin', methods=['GET', 'POST'])
@@ -149,7 +150,7 @@ def admin():
             return redirect(url_for('main.admin'))
 
         cats = models.Cat.query.order_by(models.Cat.index).all()
-        return render_template2('admin.htm', title='Admin page', cats=cats, thumb=thumb)
+        return render_template('admin.htm', title='Admin page', cats=cats, thumb=thumb)
     return redirect(url_for('main.login'))
 
 # ETag idea: https://habr.com/en/company/edison/blog/509484/

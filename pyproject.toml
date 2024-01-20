@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "aleshka-site"
+version = "0.1.0"
+description = "Site and gallery of Alёshka cat"
+authors = ["kapnuu <pryanichnikov.av@gmail.com>"]
+readme = "README.md"
+packages = [{include = "aleshka"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^3.0.1"
+sqlalchemy = "^2.0.25"
+requests = "^2.31.0"
+pillow = "^10.2.0"
+flask-sqlalchemy = "^3.1.1"
+flask-migrate = "^4.0.5"
+python-dotenv = "^1.0.0"
+waitress = "^2.1.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
