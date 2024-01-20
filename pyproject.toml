@@ -3,6 +3,7 @@ name = "aleshka-site"
 version = "0.1.0"
 description = "Site and gallery of Alёshka cat"
 authors = ["kapnuu <pryanichnikov.av@gmail.com>"]
+license = "MIT"
 readme = "README.md"
 packages = [{include = "aleshka"}]
 
